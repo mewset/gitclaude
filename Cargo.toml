@@ -1,0 +1,63 @@
+[package]
+name = "gitclaude"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <you@example.com>"]
+description = "Git hook daemon that triggers Claude Code sessions"
+license = "MIT"
+repository = "https://github.com/yourusername/gitclaude"
+keywords = ["git", "claude", "ai", "code-review", "automation"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+# CLI
+clap = { version = "4", features = ["derive", "env"] }
+dialoguer = "0.11"
+indicatif = "0.17"
+console = "0.15"
+
+# Config
+toml = "0.8"
+serde = { version = "1", features = ["derive"] }
+directories = "5"
+
+# Git
+git2 = "0.18"
+
+# Async
+tokio = { version = "1", features = ["process", "fs", "rt-multi-thread", "macros"] }
+
+# Notifications
+notify-rust = "4"
+
+# Templates
+handlebars = "5"
+
+# Error handling
+thiserror = "1"
+anyhow = "1"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Utils
+chrono = { version = "0.4", features = ["serde"] }
+glob = "0.3"
+which = "6"
+dirs = "5"
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+assert_cmd = "2"
+predicates = "3"
+
+[[bin]]
+name = "gitclaude"
+path = "src/main.rs"
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1

@@ -1,0 +1,33 @@
+# .gitclaude/config.toml
+# Repository-specific configuration (overrides global)
+
+# Use a specific profile from global config
+# profile = "thorough"
+
+[events.post-commit]
+enabled = true
+template = "review"
+context = "extended"  # Override: use more context for this repo
+output = ["notify", "file"]
+
+[events.post-push]
+enabled = true
+template = "changelog"
+
+# Repo-specific context settings
+[context]
+max_tokens = 8000  # Larger budget for this important repo
+
+[context.smart]
+# Additional files important for this specific project
+always_include = ["src/core/*.rs", "migrations/*.sql"]
+priority_by_extension = { rs = 10, sql = 9 }
+
+# Repo-specific rate limiting (maybe more lenient)
+[rate_limit]
+strategy = "cooldown"
+cooldown_minutes = 2
+
+# Custom template for this repo
+[templates]
+directory = ".gitclaude/templates/"

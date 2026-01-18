@@ -1,0 +1,197 @@
+# ~/.config/gitclaude/config.toml
+# Global configuration for gitclaude
+
+[general]
+# Run Claude asynchronously (non-blocking)
+async = true
+# Enable desktop notifications
+notify = true
+# Save responses to files
+log_responses = true
+# Log level: trace, debug, info, warn, error
+log_level = "info"
+
+[global]
+# Listen to git events in all repos (can be overridden per-repo)
+listen_globally = false
+# Default profile to use
+default_profile = "standard"
+
+# Repos to ignore even if global listening is enabled
+ignore_repos = [
+    "~/dotfiles",
+    "~/tmp/*",
+    "*/node_modules/*",
+    "*/.cache/*",
+]
+
+# ─────────────────────────────────────────────────────────────
+# Events Configuration
+# ─────────────────────────────────────────────────────────────
+
+[events.post-commit]
+enabled = true
+template = "review"
+context = "standard"
+output = ["notify"]
+
+[events.post-push]
+enabled = false
+template = "changelog"
+context = "extended"
+output = ["notify", "file"]
+
+[events.pre-commit]
+enabled = false
+template = "validate"
+context = "minimal"
+blocking = true  # Synkront, kan avbryta commit
+
+[events.post-merge]
+enabled = false
+template = "summary"
+context = "standard"
+output = ["notify"]
+
+[events.post-checkout]
+enabled = false
+template = "context"
+context = "minimal"
+output = ["notify"]
+
+# ─────────────────────────────────────────────────────────────
+# Context Configuration
+# ─────────────────────────────────────────────────────────────
+
+[context]
+# Approximate token budget for context
+max_tokens = 4000
+# Strategy: minimal, standard, extended, full, smart
+strategy = "smart"
+
+[context.smart]
+# Always include these file patterns regardless of priority
+always_include = ["*.rs", "*.py", "*.ts", "*.go", "Cargo.toml", "package.json"]
+# Priority by file extension (higher = more important)
+priority_by_extension = { rs = 10, py = 8, ts = 8, go = 8, js = 6, md = 3, json = 2, toml = 2 }
+# Include diff --stat for overview
+include_diff_stat = true
+# Maximum lines per file before truncation
+truncate_at = 500
+# Include N recent commits for context
+include_recent_commits = 3
+
+[context.exclude]
+# Patterns to always exclude from context
+patterns = [
+    "*.lock",
+    "*.min.js",
+    "*.min.css",
+    "*.map",
+    "node_modules/*",
+    "target/*",
+    "dist/*",
+    "build/*",
+    ".git/*",
+    "*.png",
+    "*.jpg",
+    "*.gif",
+    "*.svg",
+    "*.woff*",
+]
+
+# ─────────────────────────────────────────────────────────────
+# Rate Limiting
+# ─────────────────────────────────────────────────────────────
+
+[rate_limit]
+# Strategy: debounce, batch, cooldown, confirm, smart
+strategy = "debounce"
+# Debounce: wait this many seconds after last commit
+debounce_seconds = 30
+# Batch: collect commits for this window
+batch_window_seconds = 120
+# Cooldown: minimum minutes between runs
+cooldown_minutes = 5
+# Maximum runs per hour (0 = unlimited)
+max_runs_per_hour = 10
+
+# ─────────────────────────────────────────────────────────────
+# Output Configuration
+# ─────────────────────────────────────────────────────────────
+
+[output.notify]
+# Urgency: low, normal, critical
+urgency = "normal"
+# Timeout in milliseconds (0 = persistent)
+timeout = 5000
+# App name shown in notification
+app_name = "gitclaude"
+
+[output.file]
+# Directory for saved responses (relative to repo or absolute)
+path = ".gitclaude/responses/"
+# Format: markdown, json, plain
+format = "markdown"
+# Include timestamp in filename
+timestamp = true
+
+[output.terminal]
+# Automatically open terminal with response
+auto_open = false
+# Terminal emulator to use
+terminal = "alacritty"  # alacritty, kitty, ghostty, foot
+
+[output.session]
+# Open interactive Claude session after response
+auto_open = false
+# Working directory: repo, home, or specific path
+working_dir = "repo"
+
+[output.clipboard]
+# Copy response to clipboard
+enabled = false
+
+[output.git_note]
+# Add response as git note
+enabled = false
+# Note ref
+ref = "refs/notes/claude"
+
+# ─────────────────────────────────────────────────────────────
+# Monorepo Configuration
+# ─────────────────────────────────────────────────────────────
+
+[monorepo]
+# Enable monorepo detection
+enabled = true
+# Automatically detect affected packages
+detect_affected = true
+# Only send context from affected packages
+scope_context = true
+# Package directories to look for
+package_dirs = ["packages", "apps", "libs", "crates", "services"]
+
+# ─────────────────────────────────────────────────────────────
+# Templates
+# ─────────────────────────────────────────────────────────────
+
+[templates]
+# Directory for custom templates
+directory = "~/.config/gitclaude/templates/"
+# Fallback to built-in templates if custom not found
+fallback_builtin = true
+
+# ─────────────────────────────────────────────────────────────
+# Claude Configuration
+# ─────────────────────────────────────────────────────────────
+
+[claude]
+# Claude CLI binary path (default: find in PATH)
+# binary = "/usr/local/bin/claude"
+# Additional arguments to pass to claude
+# extra_args = ["--no-color"]
+# Timeout for Claude response in seconds
+timeout = 120
+# Output format: markdown, json, plain
+output_format = "markdown"
