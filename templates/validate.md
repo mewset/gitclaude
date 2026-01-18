@@ -11,23 +11,23 @@
 
 ## Instructions
 
-Validera dessa ändringar innan commit. Kontrollera:
+Validate these changes before commit. Check for:
 
-1. **Syntaxfel** - Finns det uppenbara syntaxfel?
-2. **Debug-kod** - Finns det kvarglömd debug-kod (console.log, print, dbg!, etc.)?
-3. **Känslig data** - Exponeras API-nycklar, lösenord eller annan känslig data?
-4. **TODO/FIXME** - Finns det oavslutade TODOs som borde åtgärdas?
-5. **Stora filer** - Committas onödigt stora filer?
+1. **Syntax errors** - Are there obvious syntax errors?
+2. **Debug code** - Is there leftover debug code (console.log, print, dbg!, etc.)?
+3. **Sensitive data** - Are API keys, passwords, or other sensitive data exposed?
+4. **TODO/FIXME** - Are there unfinished TODOs that should be addressed?
+5. **Large files** - Are unnecessarily large files being committed?
 
-Svara med endast ett av följande:
-- `PASS` - Inga problem hittades
-- `WARN: <anledning>` - Varning men kan committas
-- `FAIL: <anledning>` - Bör inte committas
+Respond with only one of the following:
+- `PASS` - No issues found
+- `WARN: <reason>` - Warning but can be committed
+- `FAIL: <reason>` - Should not be committed
 
-Exempel:
+Examples:
 ```
-WARN: console.log på rad 45 i src/api.ts
+WARN: console.log on line 45 in src/api.ts
 ```
 ```
-FAIL: API_KEY exponerad i config.json
+FAIL: API_KEY exposed in config.json
 ```

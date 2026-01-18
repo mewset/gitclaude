@@ -5,12 +5,12 @@ pub async fn run(keep_config: bool) -> Result<()> {
     // 1. Remove hooks
     // 2. Optionally remove .gitclaude/
 
-    println!("✅ Gitclaude inaktiverat i detta repo");
+    println!("✅ Gitclaude disabled in this repository");
 
     if !keep_config {
-        println!("   Konfiguration borttagen");
+        println!("   Configuration removed");
     } else {
-        println!("   Konfiguration bevarad");
+        println!("   Configuration preserved");
     }
 
     Ok(())

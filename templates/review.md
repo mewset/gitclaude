@@ -33,15 +33,15 @@
 
 ## Instructions
 
-Ge en kort code review av denna commit. Fokusera på:
+Provide a brief code review of this commit. Focus on:
 
-1. **Buggar** - Finns det uppenbara buggar eller edge cases?
-2. **Förbättringar** - Kan koden förbättras utan att ändra funktionalitet?
-3. **Säkerhet** - Finns det säkerhetsproblem?
-4. **Best practices** - Följer koden idiomatiska mönster?
+1. **Bugs** - Are there obvious bugs or edge cases?
+2. **Improvements** - Can the code be improved without changing functionality?
+3. **Security** - Are there any security concerns?
+4. **Best practices** - Does the code follow idiomatic patterns?
 
-Håll svaret koncist (max 15 rader). Börja med en emoji som indikerar allvarlighetsgrad:
-- ✅ Ser bra ut
-- 💡 Mindre förslag
-- ⚠️ Bör åtgärdas
-- 🚨 Kritiskt problem
+Keep the response concise (max 15 lines). Start with an emoji indicating severity:
+- ✅ Looks good
+- 💡 Minor suggestions
+- ⚠️ Should be addressed
+- 🚨 Critical issue

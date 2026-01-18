@@ -6,7 +6,7 @@ pub async fn run(events: Option<Vec<String>>) -> Result<()> {
     // 2. Install hooks
     // 3. Create .gitclaude/config.toml if needed
 
-    println!("✅ Gitclaude aktiverat i detta repo");
+    println!("✅ Gitclaude enabled in this repository");
 
     if let Some(events) = events {
         println!("   Events: {}", events.join(", "));

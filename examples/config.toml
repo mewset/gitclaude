@@ -45,7 +45,7 @@ output = ["notify", "file"]
 enabled = false
 template = "validate"
 context = "minimal"
-blocking = true  # Synkront, kan avbryta commit
+blocking = true  # Synchronous, can abort commit
 
 [events.post-merge]
 enabled = false

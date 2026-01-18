@@ -1,20 +1,20 @@
 # Gitclaude - Design Document
 
-> En systemdaemon som lyssnar på git-kommandon och triggar Claude Code sessioner
+> A system daemon that listens to git commands and triggers Claude Code sessions
 
 ## Vision
 
-Gitclaude är ett verktyg som automatiskt reagerar på git-events (commits, push, merge etc.) och spinner upp Claude Code för att ge feedback, code reviews, changelog-generering och mer.
+Gitclaude is a tool that automatically reacts to git events (commits, push, merge, etc.) and spins up Claude Code to provide feedback, code reviews, changelog generation, and more.
 
-**Nyckelprinciper:**
-- Användarens Claude-prenumeration via CLI (ingen API-kostnad)
-- Helt konfigurerbart beteende
-- Token-effektivt
-- Fungerar både globalt och per-repo
+**Key Principles:**
+- Uses the user's Claude subscription via CLI (no API costs)
+- Fully configurable behavior
+- Token-efficient
+- Works both globally and per-repo
 
 ---
 
-## Arkitektur
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -55,18 +55,18 @@ Gitclaude är ett verktyg som automatiskt reagerar på git-events (commits, push
 
 ---
 
-## Komponenter
+## Components
 
 ### CLI Parser
-Hanterar alla användarkommandon via `clap`.
+Handles all user commands via `clap`.
 
 ### Config Loader
-Laddar och mergar konfiguration från:
-1. Repo-specifik: `.gitclaude/config.toml`
+Loads and merges configuration from:
+1. Repo-specific: `.gitclaude/config.toml`
 2. Global: `~/.config/gitclaude/config.toml`
 
 ### Hooks Manager
-Installerar och hanterar git hooks:
+Installs and manages git hooks:
 - `post-commit`
 - `post-push`
 - `pre-commit`
@@ -74,7 +74,7 @@ Installerar och hanterar git hooks:
 - `post-checkout`
 
 ### Templates Engine
-Renderar prompt-templates med Handlebars:
+Renders prompt templates with Handlebars:
 - `{{commit_message}}`
 - `{{diff}}`
 - `{{author}}`
@@ -82,36 +82,36 @@ Renderar prompt-templates med Handlebars:
 - etc.
 
 ### Rate Limiter
-Förhindrar token-spam vid hög commit-aktivitet.
+Prevents token spam during high commit activity.
 
 ### Context Builder
-Bygger intelligent kontext baserat på konfigurerad nivå.
+Builds intelligent context based on configured level.
 
 ### Monorepo Detector
-Identifierar monorepo-struktur och scoped kontext.
+Identifies monorepo structure and scoped context.
 
 ### Claude Bridge
-Kör Claude CLI med rätt argument och kontext.
+Runs Claude CLI with the right arguments and context.
 
 ### Output Handlers
-Hanterar Claude-svar: notifikationer, filer, terminal, git notes.
+Handles Claude responses: notifications, files, terminal, git notes.
 
 ---
 
-## CLI-kommandon
+## CLI Commands
 
 ```bash
-gitclaude init              # Interaktiv onboarding
-gitclaude enable            # Aktivera i current repo
-gitclaude disable           # Inaktivera i current repo
-gitclaude config            # Öppna/editera config
-gitclaude config --global   # Editera global config
-gitclaude status            # Visa aktiv konfiguration
-gitclaude logs              # Visa tidigare responses
-gitclaude run <event>       # Manuellt trigga event
-gitclaude templates         # Hantera templates
-gitclaude templates list    # Lista templates
-gitclaude templates edit    # Editera template
+gitclaude init              # Interactive onboarding
+gitclaude enable            # Enable in current repo
+gitclaude disable           # Disable in current repo
+gitclaude config            # Open/edit config
+gitclaude config --global   # Edit global config
+gitclaude status            # Show active configuration
+gitclaude logs              # Show previous responses
+gitclaude run <event>       # Manually trigger event
+gitclaude templates         # Manage templates
+gitclaude templates list    # List templates
+gitclaude templates edit    # Edit template
 ```
 
 ---
@@ -120,30 +120,30 @@ gitclaude templates edit    # Editera template
 
 | Event | Trigger | Default Template | Use Case |
 |-------|---------|------------------|----------|
-| `post-commit` | Efter commit | `review` | Code review |
-| `post-push` | Efter push | `changelog` | Changelog-generering |
-| `pre-commit` | Innan commit | `validate` | Validering (blocking) |
-| `post-merge` | Efter merge | `summary` | Merge-sammanfattning |
-| `post-checkout` | Efter checkout | `context` | Branch-kontext |
+| `post-commit` | After commit | `review` | Code review |
+| `post-push` | After push | `changelog` | Changelog generation |
+| `pre-commit` | Before commit | `validate` | Validation (blocking) |
+| `post-merge` | After merge | `summary` | Merge summary |
+| `post-checkout` | After checkout | `context` | Branch context |
 
 ---
 
-## Kontextnivåer
+## Context Levels
 
-| Nivå | Inkluderar | Tokens (approx) | Use case |
-|------|-----------|-----------------|----------|
-| `minimal` | Commit message | ~100 | Snabb feedback |
+| Level | Includes | Tokens (approx) | Use case |
+|-------|----------|-----------------|----------|
+| `minimal` | Commit message | ~100 | Quick feedback |
 | `standard` | Message + diff | ~1000-4000 | Standard review |
-| `extended` | + relaterade filer, senaste commits | ~4000-8000 | Djup analys |
-| `full` | Hela repo via claude | Varierar | Arkitektur-feedback |
+| `extended` | + related files, recent commits | ~4000-8000 | Deep analysis |
+| `full` | Entire repo via claude | Varies | Architecture feedback |
 
 ### Smart Truncation
 
-För stora diffar:
-1. Beräkna complexity score per fil
-2. Prioritera efter filtyp och ändringsmängd
-3. Inkludera diff --stat för overview
-4. Truncera vid token-budget
+For large diffs:
+1. Calculate complexity score per file
+2. Prioritize by file type and change amount
+3. Include diff --stat for overview
+4. Truncate at token budget
 
 ```rust
 struct DiffChunk {
@@ -158,15 +158,15 @@ struct DiffChunk {
 
 ## Rate Limiting
 
-### Strategier
+### Strategies
 
-| Strategi | Beskrivning |
+| Strategy | Description |
 |----------|-------------|
-| `debounce` | Vänta X sekunder efter senaste commit |
-| `batch` | Samla commits, kör en gång |
-| `cooldown` | Minsta tid mellan körningar |
-| `confirm` | Fråga användaren |
-| `smart` | Kombinerad logik |
+| `debounce` | Wait X seconds after last commit |
+| `batch` | Collect commits, run once |
+| `cooldown` | Minimum time between runs |
+| `confirm` | Ask the user |
+| `smart` | Combined logic |
 
 ### Smart Detection
 
@@ -187,19 +187,19 @@ fn should_run(commits_last_hour: usize, last_run: Duration) -> Decision {
 ### Hook Resolution
 
 ```
-1. Kolla .gitclaude/config.toml i repo
-   └─ Om finns: använd repo-specifik config
+1. Check .gitclaude/config.toml in repo
+   └─ If exists: use repo-specific config
 
-2. Annars: kolla ~/.config/gitclaude/config.toml
-   └─ Om global_listen = true: använd global config
-   └─ Om repo är i ignore_repos[]: skip
+2. Otherwise: check ~/.config/gitclaude/config.toml
+   └─ If global_listen = true: use global config
+   └─ If repo is in ignore_repos[]: skip
 
-3. Merge: repo-config överskrider global
+3. Merge: repo config overrides global
 ```
 
 ---
 
-## Monorepo-stöd
+## Monorepo Support
 
 ### Detection
 
@@ -215,22 +215,22 @@ fn detect_monorepo(repo_root: &Path) -> MonorepoType {
 
 ### Scoped Context
 
-- Detektera affected packages från diff
-- Endast skicka relevant kontext
-- Stöd för nested `.gitclaude.toml`
+- Detect affected packages from diff
+- Only send relevant context
+- Support for nested `.gitclaude.toml`
 
 ---
 
 ## Output Handlers
 
-| Handler | Beskrivning | Config |
+| Handler | Description | Config |
 |---------|-------------|--------|
-| `notify` | Desktop-notifikation | urgency, timeout |
-| `file` | Spara till fil | path, format |
-| `terminal` | Öppna i terminal | terminal app |
-| `git-note` | Lägg till som git note | - |
-| `clipboard` | Kopiera till clipboard | - |
-| `session` | Öppna interaktiv Claude | auto_open |
+| `notify` | Desktop notification | urgency, timeout |
+| `file` | Save to file | path, format |
+| `terminal` | Open in terminal | terminal app |
+| `git-note` | Add as git note | - |
+| `clipboard` | Copy to clipboard | - |
+| `session` | Open interactive Claude | auto_open |
 
 ---
 
@@ -255,7 +255,7 @@ tracing-subscriber = "0.3"
 
 ---
 
-## Filstruktur
+## File Structure
 
 ```
 gitclaude/
@@ -313,30 +313,30 @@ gitclaude/
 $ gitclaude init
 
 ┌─────────────────────────────────────────────────────┐
-│  🎉 Välkommen till gitclaude!                       │
+│  🎉 Welcome to gitclaude!                           │
 └─────────────────────────────────────────────────────┘
 
-? Ska gitclaude lyssna globalt eller bara i specifika repos?
-  ○ Globalt (alla git repos, kan exkludera vissa)
-  ● Endast aktiverade repos
+? Should gitclaude listen globally or only in specific repos?
+  ○ Globally (all git repos, can exclude some)
+  ● Only enabled repos
 
-? Vilka git-events vill du reagera på?
+? Which git events should trigger Claude?
   ☑ post-commit
   ☐ post-push
   ☐ pre-commit
   ☐ post-merge
 
-? Hur ska Claude köras?
-  ○ Synkront
-  ● Asynkront
-  ○ Fråga varje gång
+? How should Claude run?
+  ○ Synchronously
+  ● Asynchronously
+  ○ Ask each time
 
-? Output-format?
-  ☑ Desktop-notifikation
-  ☐ Spara till fil
-  ☐ Öppna interaktiv session
+? Output format?
+  ☑ Desktop notification
+  ☐ Save to file
+  ☐ Open interactive session
 
-? Kontextnivå?
+? Context level?
   ○ Minimal
   ● Standard
   ○ Extended
@@ -348,33 +348,33 @@ $ gitclaude init
   ○ Cooldown
   ○ Smart
 
-✅ Konfiguration sparad!
+✅ Configuration saved!
 ```
 
 ---
 
 ## Implementation Order
 
-### Fas 1: Foundation
-- [ ] Projekt-setup (Cargo.toml, struktur)
-- [ ] CLI parsing med clap
-- [ ] Config types och loader
+### Phase 1: Foundation
+- [ ] Project setup (Cargo.toml, structure)
+- [ ] CLI parsing with clap
+- [ ] Config types and loader
 - [ ] Basic hook installation
 
-### Fas 2: Core
+### Phase 2: Core
 - [ ] Context builder (minimal + standard)
 - [ ] Claude bridge
 - [ ] Output: notify
 - [ ] Rate limiting: debounce
 
-### Fas 3: Features
-- [ ] Interaktiv onboarding
+### Phase 3: Features
+- [ ] Interactive onboarding
 - [ ] Templates engine
 - [ ] Extended context
 - [ ] Monorepo detection
-- [ ] Alla output handlers
+- [ ] All output handlers
 
-### Fas 4: Polish
+### Phase 4: Polish
 - [ ] Error handling
 - [ ] Logging
 - [ ] Tests
@@ -385,8 +385,8 @@ $ gitclaude init
 
 ## Open Questions (Resolved)
 
-1. ✅ Språk: Rust
-2. ✅ Global/per-repo: Båda, konfigurerbart
-3. ✅ Stora diffar: Smart truncation + prioritering
-4. ✅ Rate limiting: Multiple strategies, konfigurerbart
-5. ✅ Monorepo: Automatisk detection + scoped context
+1. ✅ Language: Rust
+2. ✅ Global/per-repo: Both, configurable
+3. ✅ Large diffs: Smart truncation + prioritization
+4. ✅ Rate limiting: Multiple strategies, configurable
+5. ✅ Monorepo: Automatic detection + scoped context

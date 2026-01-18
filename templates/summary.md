@@ -18,13 +18,13 @@
 
 ## Instructions
 
-Ge en sammanfattning av denna merge på max 5 rader:
+Provide a summary of this merge in max 5 lines:
 
-1. Vad var huvudsyftet med denna branch?
-2. Vilka större ändringar gjordes?
-3. Finns det något som bör följas upp?
+1. What was the main purpose of this branch?
+2. What major changes were made?
+3. Is there anything that should be followed up on?
 
-Börja sammanfattningen med en passande emoji:
+Start the summary with an appropriate emoji:
 - 🚀 Feature release
 - 🐛 Bug fix
 - 🔧 Refactoring

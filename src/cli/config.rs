@@ -10,10 +10,10 @@ pub async fn run(global: bool, edit: bool) -> Result<()> {
 
     if edit {
         // TODO: Open in $EDITOR
-        println!("Öppnar {} i editor...", config_path);
+        println!("Opening {} in editor...", config_path);
     } else {
         // TODO: Print current config
-        println!("Konfiguration: {}", config_path);
+        println!("Configuration: {}", config_path);
         println!();
         println!("# TODO: Print config contents");
     }

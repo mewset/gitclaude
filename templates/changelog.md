@@ -1,6 +1,6 @@
 # Changelog Generation
 
-Baserat på följande commits sedan senaste push, generera en changelog-entry.
+Based on the following commits since last push, generate a changelog entry.
 
 ## Commits
 
@@ -19,25 +19,25 @@ Baserat på följande commits sedan senaste push, generera en changelog-entry.
 
 ## Instructions
 
-Generera en changelog-entry i Keep a Changelog-format (https://keepachangelog.com/).
+Generate a changelog entry in Keep a Changelog format (https://keepachangelog.com/).
 
-Kategorisera ändringar under rätt rubrik:
-- **Added** - Ny funktionalitet
-- **Changed** - Ändringar i befintlig funktionalitet
-- **Deprecated** - Funktionalitet som snart tas bort
-- **Removed** - Borttagen funktionalitet
-- **Fixed** - Buggfixar
-- **Security** - Säkerhetsuppdateringar
+Categorize changes under the appropriate heading:
+- **Added** - New features
+- **Changed** - Changes to existing functionality
+- **Deprecated** - Features that will be removed soon
+- **Removed** - Removed features
+- **Fixed** - Bug fixes
+- **Security** - Security updates
 
 Format:
 ```markdown
 ## [Unreleased]
 
 ### Added
-- Kort beskrivning av ny feature
+- Brief description of new feature
 
 ### Fixed
-- Kort beskrivning av fix
+- Brief description of fix
 ```
 
-Håll beskrivningarna koncisa och användarfokuserade (inte utvecklarfokuserade).
+Keep descriptions concise and user-focused (not developer-focused).
